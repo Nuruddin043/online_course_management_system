@@ -5,12 +5,12 @@ const authLeader= async (req,res,next)=>{
     try{
         const token=req.header('Authorization').replace('Bearer ','')
         const decoded=jwt.verify(token,process.env.JWT_SECRET)
-        const user= await LeaderInfo.findOne({_id:decoded._id,'tokens.token':token})
-        if(!user){
+        const leader= await LeaderInfo.findOne({_id:decoded._id,'tokens.token':token})
+        if(!leader){
             throw new Error()
         }
 
-        req.user=user
+        req.leader=leader
         req.token=token
         next()
         

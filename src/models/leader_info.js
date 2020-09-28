@@ -33,22 +33,6 @@ const leaderInfoSchema=new mongooes.Schema({
             }
         }
     },
-    program:{
-        program_code:{
-            ...string_required
-        },
-        year:{
-            ...string_required
-        },
-        section:{
-            ...string_required
-        }
-    },
-    leader_of:{
-        name_of_pack:{
-            ...string_required
-        }
-    },
     tokens:[{
         token:{
             type:String,
