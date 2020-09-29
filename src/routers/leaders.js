@@ -17,11 +17,11 @@ router.post('/leader/login',async(req,res,next)=>{
                 if(co_leader){
                     return res.status(203).send({...leader.toObject(),has_coleader:true,coleader_email:co_leader.email})
                 }
-                res.status(206).send({...leader.toObject(),has_coleader:false,coleader_email:''})
+                res.status(203).send({...leader.toObject(),has_coleader:false,coleader_email:''})
             }
             
         }else{
-            res.status(207).send({msg:'email not found'})
+            res.status(404).send({msg:'email not found'})
         }
         
     }catch(e){
