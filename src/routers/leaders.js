@@ -15,9 +15,9 @@ router.post('/leader/login',async(req,res,next)=>{
             }else{
                 const co_leader=await Leaders.findOne({name_of_pack:leader.name_of_pack,email:{$ne:leader.email}})
                 if(co_leader){
-                    return res.status(203).send({msg:"not registered",co_leader:co_leader.email,program})
+                    return res.status(203).send({...leader.toObject(),has_coleader:true,coleader_email:co_leader.email})
                 }
-                res.status(206).send({msg:"not registered",co_leader:"no co_leader found",program})
+                res.status(206).send({...leader.toObject(),has_coleader:false,coleader_email:''})
             }
             
         }else{
