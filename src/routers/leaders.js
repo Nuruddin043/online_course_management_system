@@ -21,7 +21,7 @@ router.post('/leader/login',async(req,res,next)=>{
             }
             
         }else{
-            res.status(404).send({msg:'email not found'})
+            res.status(207).send({msg:'email not found'})
         }
         
     }catch(e){
