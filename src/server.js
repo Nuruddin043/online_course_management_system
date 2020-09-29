@@ -5,11 +5,11 @@ const bodyParser = require('body-parser');
 const adminRouter=require('./routers/admin')
 const leadersRouter=require('./routers/leaders')
 const studentsRouter=require('./routers/students')
-
+var cors = require('cors')
 const Router= new express.Router()
 
 const app = express();
-
+app.use(cors())
 //integration of env file.
 require('dotenv').config()
 require('./db/mongooes')
