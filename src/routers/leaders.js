@@ -3,6 +3,7 @@ const router=new express.Router()
 const Leaders=require('../models/leaders')
 const LeaderInfo=require('../models/leader_info')
 const authLeader=require('../middleware/authLeader')
+const { json } = require('body-parser')
 
 router.post('/leader/login',async(req,res,next)=>{
     try{
@@ -13,37 +14,40 @@ router.post('/leader/login',async(req,res,next)=>{
             if(leader.isRegistered){
                 const co_leader=await Leaders.findOne({name_of_pack:leader.name_of_pack,email:{$ne:leader.email}})
                 if(co_leader){
-                    res.status(202).send({
+                    const obj={
                         isRegistered:leader.isRegistered,
                         email:leader.email,
                         satage:2,
                         
-                    })
+                    }
+                    res.status(202).send(JSON.stringify(obj))
                 }
             }else{
                 const co_leader=await Leaders.findOne({name_of_pack:leader.name_of_pack,email:{$ne:leader.email},name_of_pack:{$ne:null}})
                 if(co_leader){
-                    return res.status(203).send({
-                    isRegistered:leader.isRegistered,
-                    email:leader.email,
-                    stage:1,
-                    has_coleader:true,
-                    coleader_email:co_leader.email,
-                    program:leader.program})
+                    const obj1={
+                        isRegistered:leader.isRegistered,
+                        email:leader.email,
+                        stage:1,
+                        has_coleader:true,
+                        coleader_email:co_leader.email,
+                        program:leader.program}
+                    return res.status(203).send(JSON.stringify(obj1))
                 }
                 delete leader.program
-                res.status(203).send({
+                const obj2={
                     isRegistered:leader.isRegistered,
                     email:leader.email,
                     stage:1,
                     has_coleader:false,
                     coleader_email:null,
-                    program:leader.program})
+                    program:leader.program}
+                res.status(203).send(JSON.stringify(obj2))
                     
             }
             
         }else{
-            res.status(404).send({msg:'email not found'})
+            res.status(404).send(JSON.stringify({msg:'email not found'}))
         }
         
     }catch(e){
@@ -83,16 +87,16 @@ router.post('/leader/register',async(req,res,next)=>{
     
                 await leader.save();
      
-                res.status(201).send({email:leader.email})
+                res.status(201).send(JSON.stringify({email:leader.email}))
                     
                 
                 
             }else{
-                res.status(208).send({msg:"already registered"})
+                res.status(208).send(JSON.stringify({msg:"already registered"}))
             }
             
         }else{
-            res.status(403).send({msg:"Email not found on leaders"})
+            res.status(403).send(JSON.stringify({msg:"Email not found on leaders"}))
         }
         
         
@@ -105,7 +109,7 @@ router.post('/leader/auth',async(req,res,next)=>{
     try{
         const leader=await LeaderInfo.findByCredentials(req.body.email,req.body.password)
         const token=await leader.generateAuthToken()
-        res.status(200).send({leader,token})
+        res.status(200).send(JSON.stringify({leader,token}))
     }catch(e){
         res.status(400).send({msg:"wrong password"})
     }
