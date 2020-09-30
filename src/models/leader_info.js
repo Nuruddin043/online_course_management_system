@@ -28,7 +28,7 @@ const leaderInfoSchema=new mongooes.Schema({
         type:String,
         trim:true,
         validate(value){
-            if(value.length<6){
+            if(value.length<4){
                 throw new Error("password length is short")
             }
         }
@@ -45,7 +45,7 @@ const leaderInfoSchema=new mongooes.Schema({
         }
     },
     name_of_pack:{
-            ...string_required
+        ...string_required
     },
     tokens:[{
         token:{
@@ -62,6 +62,10 @@ leaderInfoSchema.methods.toJSON = function(){
     const leader=this
     const leaderObject= leader.toObject()
     delete leaderObject.password
+    delete leaderObject.createdAt
+    delete leaderObject.updatedAt
+    delete leaderObject.__v
+    delete leaderObject.program
     delete leaderObject.tokens
     return leaderObject
 }

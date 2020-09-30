@@ -9,15 +9,37 @@ router.post('/leader/login',async(req,res,next)=>{
         const email=req.body.email
         const leader= await Leaders.findOne({email})
         if(leader){
-            const program={...leader.program.toObject()}
+           
             if(leader.isRegistered){
-                res.status(202).send(leader)
-            }else{
                 const co_leader=await Leaders.findOne({name_of_pack:leader.name_of_pack,email:{$ne:leader.email}})
                 if(co_leader){
-                    return res.status(203).send({...leader.toObject(),has_coleader:true,coleader_email:co_leader.email})
+                    res.status(202).send({
+                        isRegistered:leader.isRegistered,
+                        email:leader.email,
+                        satage:2,
+                        
+                    })
                 }
-                res.status(203).send({...leader.toObject(),has_coleader:false,coleader_email:''})
+            }else{
+                const co_leader=await Leaders.findOne({name_of_pack:leader.name_of_pack,email:{$ne:leader.email},name_of_pack:{$ne:null}})
+                if(co_leader){
+                    return res.status(203).send({
+                    isRegistered:leader.isRegistered,
+                    email:leader.email,
+                    stage:1,
+                    has_coleader:true,
+                    coleader_email:co_leader.email,
+                    program:leader.program})
+                }
+                delete leader.program
+                res.status(203).send({
+                    isRegistered:leader.isRegistered,
+                    email:leader.email,
+                    stage:1,
+                    has_coleader:false,
+                    coleader_email:null,
+                    program:leader.program})
+                    
             }
             
         }else{
@@ -36,26 +58,32 @@ router.post('/leader/register',async(req,res,next)=>{
         if(leader){
             if(!leader.isRegistered){
                 const name_of_pack=req.body.program.program_code+' '+req.body.program.year+'-'+req.body.program.section
-                if(req.body.invite_coleader){
-                    const coleader=new Leaders({
-                        email:req.body.coleader_email,
-                        program:{
-                            program_code:req.body.program.program_code,
-                            year:req.body.program.year,
-                            section:req.body.program.section
-                        },
-                        name_of_pack
-                    })
-                    await coleader.save()
+                if(req.body.has_coleader){
+                    const find_coleader= await Leaders.findOne({email:req.body.coleader_email})
+                    if(!find_coleader){
+                
+                        const coleader=new Leaders({
+                            email:req.body.coleader_email,
+                            program:{
+                                program_code:req.body.program.program_code,
+                                year:req.body.program.year,
+                                section:req.body.program.section
+                            },
+                            name_of_pack
+                        })
+                        await coleader.save()
+                    }
                 }
-                delete req.body.invite_coleader
+                delete req.body.has_coleader
                 delete req.body.coleader_email
+     
                 const newLeader= new LeaderInfo({...req.body,name_of_pack})
                 await newLeader.save()
-                const token=await newLeader.generateAuthToken()
                 leader.isRegistered=true;
+    
                 await leader.save();
-                res.status(201).send({newLeader,token})
+     
+                res.status(201).send({email:leader.email})
                     
                 
                 
@@ -69,7 +97,7 @@ router.post('/leader/register',async(req,res,next)=>{
         
         
     } catch(e){
-        res.status(400).send(e)
+        next(e)
     }
 
 })

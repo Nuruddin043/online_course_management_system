@@ -5,6 +5,10 @@ const string_required={
         required:true,
         trim:true
 }
+const string_not_required={
+    type:String,
+    trim:true
+}
 const leadersSchema=new mongooes.Schema({
     email:{
         ...string_required,
@@ -22,17 +26,17 @@ const leadersSchema=new mongooes.Schema({
     },
     program:{
         program_code:{
-            ...string_required
+            ...string_not_required
         },
         year:{
-            ...string_required
+            ...string_not_required
         },
         section:{
-            ...string_required
+            ...string_not_required
         }
     },
     name_of_pack:{
-            ...string_required
+        ...string_not_required
     }
 },{
     timestamps:true
