@@ -125,15 +125,7 @@ router.post('/leader/logout',authLeader,async(req,res)=>{
         res.status(500).send(e)
       }
 })
-router.get('/leader_count',authLeader,async(req,res)=>{
-    try{
-        req.leader.tokens=[]
-        await req.leader.save()
-        res.status(205).send({msg:"log out successfully"})
-      }catch(e){
-        res.status(500).send(e)
-      }
-})
+
 
 
 module.exports=router

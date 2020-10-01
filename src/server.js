@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const adminRouter=require('./routers/admin')
 const leadersRouter=require('./routers/leaders')
 const studentsRouter=require('./routers/students')
+const leadersGetRouter=require('./routers/leaders_get_endpoints')
 var cors = require('cors')
 const Router= new express.Router()
 
@@ -27,6 +28,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 ///all routers file
 app.use(adminRouter)
 app.use(leadersRouter)
+app.use(leadersGetRouter)
 app.use(studentsRouter)
 
 
