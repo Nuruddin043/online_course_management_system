@@ -111,7 +111,7 @@ router.post('/leader/auth',async(req,res,next)=>{
     try{
         const leader=await LeaderInfo.findByCredentials(req.body.email,req.body.password)
         const token=await leader.generateAuthToken()
-        res.status(200).send(JSON.stringify({leader,token}))
+        res.status(200).send(JSON.stringify({token}))
     }catch(e){
         res.status(400).send({msg:"wrong password"})
     }
