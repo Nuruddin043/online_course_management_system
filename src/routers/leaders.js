@@ -9,11 +9,10 @@ router.post('/leader/login',async(req,res,next)=>{
     try{
         const email=req.body.email
         const leader= await Leaders.findOne({email})
+        let name_of_pack;
         if(leader){
            
             if(leader.isRegistered){
-                const co_leader=await Leaders.findOne({name_of_pack:leader.name_of_pack,email:{$ne:leader.email}})
-                if(co_leader){
                     const obj={
                         isRegistered:leader.isRegistered,
                         email:leader.email,
@@ -21,9 +20,14 @@ router.post('/leader/login',async(req,res,next)=>{
                         
                     }
                     res.status(202).send(JSON.stringify(obj))
-                }
+                
             }else{
-                const co_leader=await Leaders.findOne({name_of_pack:leader.name_of_pack,email:{$ne:leader.email},name_of_pack:{$ne:null}})
+                if(leader.program){
+                    name_of_pack=leader.program.program_code+' '+leader.program.year+'-'+leader.program.section
+                }else{
+                    name_of_pack="test"
+                }
+                const co_leader=await Leaders.findOne({name_of_pack:name_of_pack,email:{$ne:leader.email}})
                 if(co_leader){
                     const obj1={
                         isRegistered:leader.isRegistered,
