@@ -10,39 +10,30 @@ router.post('/leader/login',async(req,res,next)=>{
         const email=req.body.email
         const leader= await Leaders.findOne({email})
         let name_of_pack;
-        if(leader){
-           
+        if(leader){          
             if(leader.isRegistered){
                     const obj={
                         isRegistered:leader.isRegistered,
-                        email:leader.email,
-                        satage:2,
-                        
                     }
                     res.status(202).send(JSON.stringify(obj))
                 
             }else{
                 if(leader.program){
                     name_of_pack=leader.program.program_code+' '+leader.program.year+'-'+leader.program.section
-                }else{
-                    name_of_pack="test"
+                    const co_leader=await Leaders.findOne({name_of_pack:name_of_pack,email:{$ne:leader.email}})
+                    if(co_leader){
+                        const obj1={
+                            isRegistered:leader.isRegistered,
+                            email:leader.email,
+                            has_coleader:true,
+                            coleader_email:co_leader.email,
+                            program:leader.program}
+                        return res.status(203).send(JSON.stringify(obj1))
+                    }
                 }
-                const co_leader=await Leaders.findOne({name_of_pack:name_of_pack,email:{$ne:leader.email}})
-                if(co_leader){
-                    const obj1={
-                        isRegistered:leader.isRegistered,
-                        email:leader.email,
-                        stage:1,
-                        has_coleader:true,
-                        coleader_email:co_leader.email,
-                        program:leader.program}
-                    return res.status(203).send(JSON.stringify(obj1))
-                }
-                delete leader.program
                 const obj2={
                     isRegistered:leader.isRegistered,
                     email:leader.email,
-                    stage:1,
                     has_coleader:false,
                     coleader_email:null,
                     program:leader.program}
@@ -87,6 +78,13 @@ router.post('/leader/register',async(req,res,next)=>{
      
                 const newLeader= new LeaderInfo({...req.body,name_of_pack})
                 await newLeader.save()
+                const prog={
+                        program_code:req.body.program.program_code,
+                        year:req.body.program.year,
+                        section:req.body.program.section
+                    }
+                leader.name_of_pack=name_of_pack
+                leader.program=prog
                 leader.isRegistered=true;
     
                 await leader.save();
