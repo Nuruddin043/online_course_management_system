@@ -24,7 +24,6 @@ router.post('/leader/login',async(req,res,next)=>{
                     if(co_leader){
                         const obj1={
                             isRegistered:leader.isRegistered,
-                            email:leader.email,
                             has_coleader:true,
                             coleader_email:co_leader.email,
                             program:leader.program}
@@ -33,7 +32,6 @@ router.post('/leader/login',async(req,res,next)=>{
                 }
                 const obj2={
                     isRegistered:leader.isRegistered,
-                    email:leader.email,
                     has_coleader:false,
                     coleader_email:null,
                     program:leader.program}
@@ -77,6 +75,7 @@ router.post('/leader/register',async(req,res,next)=>{
                 delete req.body.coleader_email
      
                 const newLeader= new LeaderInfo({...req.body,name_of_pack})
+                const token=await newLeader.generateAuthToken()
                 await newLeader.save()
                 const prog={
                         program_code:req.body.program.program_code,
@@ -89,7 +88,7 @@ router.post('/leader/register',async(req,res,next)=>{
     
                 await leader.save();
      
-                res.status(201).send(JSON.stringify({email:leader.email}))
+                res.status(201).send(JSON.stringify({token:token}))
                     
                 
                 
