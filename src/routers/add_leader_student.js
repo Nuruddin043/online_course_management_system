@@ -1,6 +1,8 @@
 const express=require('express')
 const router=new express.Router()
 const Leaders=require('../models/leaders')
+const Studetns=require('../models/students')
+const authLeader=require('../middleware/authLeader')
 
 router.post('/add/leader',async(req,res,next)=>{
     try{
@@ -17,6 +19,23 @@ router.post('/add/leader',async(req,res,next)=>{
        
     }catch(e){
         next(e)
+    }
+
+})
+
+router.post('/invite/student',authLeader,async(req,res,next)=>{
+    try{
+        console.log(req.leader.name_of_pack,req.leader.program)
+        const studetns=new Studetns({
+            email:req.body.email,
+            program:req.leader.program.toObject(),
+            name_of_pack:req.leader.name_of_pack
+        })
+        await studetns.save()
+        res.status(200).send()
+       
+    }catch(e){
+        res.status(206).send()
     }
 
 })

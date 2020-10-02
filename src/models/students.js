@@ -5,6 +5,10 @@ const string_required={
         required:true,
         trim:true
 }
+const string_not_required={
+    type:String,
+    trim:true
+}
 const studentsSchema=new mongooes.Schema({
     email:{
         ...string_required,
@@ -20,8 +24,19 @@ const studentsSchema=new mongooes.Schema({
         type:Boolean,
         default:false
     },
-    leader_id:{
-        ...string_required,
+    program:{
+        program_code:{
+            ...string_not_required
+        },
+        year:{
+            ...string_not_required
+        },
+        section:{
+            ...string_not_required
+        }
+    },
+    name_of_pack:{
+        ...string_not_required
     }
 },{
     timestamps:true

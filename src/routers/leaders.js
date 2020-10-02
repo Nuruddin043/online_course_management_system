@@ -120,7 +120,7 @@ router.post('/leader/logout',authLeader,async(req,res)=>{
     try{
         req.leader.tokens=[]
         await req.leader.save()
-        res.status(205).send({msg:"log out successfully"})
+        res.status(200).send()
       }catch(e){
         res.status(500).send(e)
       }

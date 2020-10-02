@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 //////////////////////////////////////////////
-const adminRouter=require('./routers/admin')
+const add_leader_studentRouter=require('./routers/add_leader_student')
 const leadersRouter=require('./routers/leaders')
 const studentsRouter=require('./routers/students')
 const leadersGetRouter=require('./routers/leaders_get_endpoints')
@@ -26,7 +26,7 @@ app.use(express.json())
 app.use(express.static(path.join(__dirname, 'public')));
 
 ///all routers file
-app.use(adminRouter)
+app.use(add_leader_studentRouter)
 app.use(leadersRouter)
 app.use(leadersGetRouter)
 app.use(studentsRouter)
