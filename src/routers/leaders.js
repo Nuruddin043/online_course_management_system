@@ -2,6 +2,7 @@ const express=require('express')
 const router=new express.Router()
 const Leaders=require('../models/leaders')
 const LeaderInfo=require('../models/leader_info')
+const Program=require('../models/programs')
 const authLeader=require('../middleware/authLeader')
 const { json } = require('body-parser')
 
@@ -85,9 +86,22 @@ router.post('/leader/register',async(req,res,next)=>{
                 leader.name_of_pack=name_of_pack
                 leader.program=prog
                 leader.isRegistered=true;
-    
                 await leader.save();
-     
+                
+                const program= await Program.findOne({name_of_pack})
+                if(program){
+                    program.leaders= program.leaders.concat({leader_email:email})
+                    await program.save()
+                }else{
+                    const new_program=new Program({
+                        leaders:[{
+                            leader_email:email
+                        }],
+                        name_of_pack:name_of_pack
+                    })
+                    await new_program.save()
+                }
+
                 res.status(201).send(JSON.stringify({token:token}))
                     
                 

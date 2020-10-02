@@ -2,10 +2,11 @@ const express=require('express')
 const router=new express.Router()
 const Leaders=require('../models/leaders')
 const LeaderInfo=require('../models/leader_info')
+const Program=require('../models/programs')
 const authLeader=require('../middleware/authLeader')
 const { json } = require('body-parser')
 
-router.get('/leader/dashboard',authLeader,async(req,res)=>{
+router.get('/leader/dashboard',authLeader,async(req,res,next)=>{
     try{
         const co_leader=await LeaderInfo.find({name_of_pack:req.leader.name_of_pack,email:{$ne:req.leader.email}})
         let co_leaderObj=[]
@@ -20,6 +21,8 @@ router.get('/leader/dashboard',authLeader,async(req,res)=>{
           })
       
         }
+        const program= await Program.findOne({name_of_pack:req.leader.name_of_pack})
+        delete program.students._id
         const rturnObj={
           leader:{
             firstname:req.leader.firstname,
@@ -35,7 +38,8 @@ router.get('/leader/dashboard',authLeader,async(req,res)=>{
 
           },
           students:{
-            count:5
+            count:program.students.length,
+            emails:program.students
           }
           
         }

@@ -1,11 +1,10 @@
 const mongooes=require('mongoose')
-const validator=require('validator')
 const string_required={
         type:String,
         required:true,
         trim:true
 }
-const studentGroupsSchema=new mongooes.Schema({
+const programSchema=new mongooes.Schema({
     leaders:[{
         leader_email:{
             ...string_required,
@@ -13,24 +12,17 @@ const studentGroupsSchema=new mongooes.Schema({
             lowercase:true,
         }
     }],
-    program:{
-        program_code:{
-            ...string_required
-        },
-        year:{
-            ...string_required
-        },
-        section:{
-            ...string_required
-        }
+    name_of_pack:{
+        ...string_required
     },
-    group_students:[
+    students:[
         {
             student_email:{
                 ...string_required,
                 unique:true,
                 lowercase:true,
             }
+
         }
     ]
 },{
@@ -38,7 +30,7 @@ const studentGroupsSchema=new mongooes.Schema({
 })
 
 
-const Student_groups=mongooes.model('Student_groups',studentGroupsSchema)
+const Programs=mongooes.model('Programs',programSchema)
 
 
-module.exports=Student_groups
+module.exports=Programs

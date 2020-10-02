@@ -2,7 +2,7 @@ const express=require('express')
 const router=new express.Router()
 const Students=require('../models/students')
 const StudentInfo=require('../models/student_info')
-const Student_groups=require('../models/student_groups')
+const Program=require('../models/programs')
 const authStudent=require('../middleware/authStudent')
 const { json } = require('body-parser')
 
@@ -46,7 +46,6 @@ router.post('/student/register',async(req,res,next)=>{
                 const token=await newStudent.generateAuthToken()
                 await newStudent.save()
                 student.isRegistered=true;
-    
                 await student.save();
      
                 res.status(201).send(JSON.stringify({token:token}))
