@@ -34,7 +34,8 @@ router.get('/leader/dashboard',authLeader,async(req,res,next)=>{
           },
           coleader:co_leaderObj,
           schedules:{
-            count:5
+            count:program.schedules.length,
+            due_dates:program.schedules
 
           },
           students:{

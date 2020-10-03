@@ -24,6 +24,15 @@ const programSchema=new mongooes.Schema({
             }
 
         }
+    ],
+    schedules:[
+        {
+            schedule:{
+                ...string_required,
+                unique:true
+            }
+
+        }
     ]
 },{
     timestamps:true

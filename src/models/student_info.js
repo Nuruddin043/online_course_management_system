@@ -24,6 +24,7 @@ const studentInfoSchema=new mongooes.Schema({
             }
         }
     },
+   
     password:{
         type:String,
         trim:true,
@@ -34,6 +35,17 @@ const studentInfoSchema=new mongooes.Schema({
             if(value.length<6){
                 throw new Error("password length is short")
             }
+        }
+    },
+    program:{
+        program_code:{
+            ...string_required
+        },
+        year:{
+            ...string_required
+        },
+        section:{
+            ...string_required
         }
     },
     name_of_pack:{

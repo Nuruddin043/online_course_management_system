@@ -6,6 +6,9 @@ const add_leader_studentRouter=require('./routers/add_leader_student')
 const leadersRouter=require('./routers/leaders')
 const studentsRouter=require('./routers/students')
 const leadersGetRouter=require('./routers/leaders_get_endpoints')
+const schedulesRouter=require('./routers/schedules')
+const studentsGetRouter=require('./routers/students_get_endpoints')
+
 var cors = require('cors')
 const Router= new express.Router()
 
@@ -30,7 +33,8 @@ app.use(add_leader_studentRouter)
 app.use(leadersRouter)
 app.use(leadersGetRouter)
 app.use(studentsRouter)
-
+app.use(schedulesRouter)
+app.use(studentsGetRouter)
 
 
 
